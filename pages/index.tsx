@@ -115,8 +115,9 @@ export default function Home() {
   const CreateUserUI = () => {
     return (
       <>
-        <h2 className='text-3xl mt-[40px] font-normal'>It seems you are a newbie</h2>
-        <input type='text' placeholder="Name" className='rounded-2xl my-[20px] p-2 w-[300px] border-4 border-[#A0D8EF]' />
+        <h2 className='text-3xl mt-[40px] font-thin'>It seems you are a newbie</h2>
+        <input type='text' placeholder="Name" className='rounded-2xl my-[20px] p-2 w-[300px] border-4 border-[#A0D8EF] bg-slate-200 focus:outline-none' />
+        <div className='flex flex-col justify-start'>
         <div className='flex flex-row text-left mb-[10px]'>
           <button className={`${cardio?`bg-[#A9EFA0]`:`bg-[#A0D8EF]`} rounded-full mx-[10px] px-10 py-1 font-normal hover:cursor-default`}>
             Cardio
@@ -147,6 +148,7 @@ export default function Home() {
             :
             <MdOutlineDone size={40} color={"white"}className='bg-[#A9EFA0] rounded-full' onClick={()=>setYoga(!yoga)}/>
           }
+        </div>
         </div>
         <button className='bg-[#A0D8EF] rounded-full mt-[30px] px-14 py-3 font-medium' onClick={connectWallet}>
           Become a member
