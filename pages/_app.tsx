@@ -10,7 +10,7 @@ import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 
 export default function App({ Component, pageProps }: AppProps) {
 
-  const network = WalletAdapterNetwork.Devnet;
+  const network = "mainnet-beta";
 
   const endpoint = useMemo(() => clusterApiUrl(network), [network])
 
@@ -21,7 +21,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
-        <Component {...pageProps} />
+        <WalletModalProvider>
+          <Component {...pageProps} />
+        </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
   )
