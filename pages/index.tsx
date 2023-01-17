@@ -72,7 +72,7 @@ export default function Home() {
     console.log(solWal)
       const provider = getProvider()
     
-      const socialProtocol: SocialProtocol = await new SocialProtocol(solWal, null, options).init()
+      const socialProtocol: SocialProtocol = await new SocialProtocol(provider.wallet as Wallet, null, options).init()
       setSocialProtocol(socialProtocol);
       const userInfo = await socialProtocol.getUserByPublicKey(provider.wallet.publicKey)
       console.log(userInfo)
@@ -96,11 +96,11 @@ export default function Home() {
               <GiGymBag />
               <p className="ml-[3px]">Sling Gym</p>
             </div>
-            {/* <button className="mt-[150px] justify-start border-white border-[1px] w-fit p-2 rounded-md" onClick={connectWallet}>
+            <button className="mt-[150px] justify-start border-white border-[1px] w-fit p-2 rounded-md" onClick={connectWallet}>
               Connect
-            </button> */}
-            <WalletMultiButton />
-            <WalletDisconnectButton />
+            </button>
+            {/* <WalletMultiButton />
+            <WalletDisconnectButton /> */}
 
             <button className="mt-[150px] justify-start border-white border-[1px] w-fit p-2 rounded-md" onClick={Initialize}>
               Initialize
