@@ -17,6 +17,8 @@ declare global {
   }
 }
 
+
+
 const opts = {
   preFlightCommitment: "processed"
 } as ConfirmOptions
@@ -72,10 +74,13 @@ export default function Home() {
     setWalletAddress(response.publicKey.toString())
     if (response) {
       const provider = getProvider()
-      const socialProtocol: SocialProtocol = await new SocialProtocol(provider.wallet as Wallet, null, options).init()
+      const socialProtocol: SocialProtocol = await new SocialProtocol(solWal, null, options).init()
       setSocialProtocol(socialProtocol);
       const userInfo = await socialProtocol.getUserByPublicKey(provider.wallet.publicKey)
       console.log(userInfo)
+      const group = await socialProtocol.getUserGroup(provider.wallet.publicKey)
+      //const group: Group = await socialProtocol.createGroup("Weight", "A group that contains posts related to Weight Training",null);
+      console.log(group);
     }
   }
 
@@ -97,11 +102,58 @@ export default function Home() {
   }
 
   const CreateUser = async () => {
+    if(userName.length === 0){
+      return console.error('Enter Name to Continue');
+    }
+
+    
+
     if (socialProtocol) {
-      const user: User = await socialProtocol.createUser("Anoy", null, "God")
-      console.log(user)
+      if(avatar){
+        const profileImage = avatar;
+        let base64Img = await convertBase64(profileImage)
+        const FileDataValue = {
+          base64: base64Img ,
+          size: avatar.size,
+          type: avatar.type,
+        };
+
+        if(cardio || weight || yoga){
+          const bio = {
+            Cardio : cardio,
+            Weight : weight,
+            Yoga : yoga
+          }
+          const user: User = await socialProtocol.createUser(userName, FileDataValue as FileData, JSON.stringify(bio))
+          // const user: User = await socialProtocol.createUser("Anoy", null, "God")
+          console.log(user)
+        }
+        else{
+          return console.error('Please select atleast one category to continue');
+        }
+        
+      }else{
+        return console.error('Upload avatar to Continue');
+      }
+      
     }
   }
+
+  const convertBase64 = (file: File) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
   const ConnectUI = () => {
     return (
       <>
@@ -236,7 +288,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    //checkIfWalletConnected()
+
   }, [])
 
   return (
