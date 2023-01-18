@@ -6,7 +6,7 @@ import { SocialProtocol } from '@spling/social-protocol'
 import { AnchorWallet, useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { clusterApiUrl, ConfirmOptions, Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { ProtocolOptions, User } from '@spling/social-protocol/dist/types'
+import { FileData, ProtocolOptions, User } from '@spling/social-protocol/dist/types'
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import Image from 'next/image'
@@ -176,7 +176,7 @@ export default function Home() {
           value={userName} 
           type='text' 
           placeholder="Name" 
-          className='rounded-2xl my-[20px] p-2 w-[300px] border-4 border-[#A0D8EF] focus:outline-none text-[#565656]' 
+          className='rounded-2xl my-[20px] p-2 w-[300px] border-4 border-[#A0D8EF] focus:outline-none text-[#565656] bg-slate-200' 
           onChange={(e)=>{
             if(e.target)
             setUserName(e.target.value)
@@ -251,7 +251,7 @@ export default function Home() {
         </div>
 
 
-        <button className='bg-[#A0D8EF] rounded-full mt-[30px] px-14 py-3 font-medium' onClick={connectWallet}>
+        <button className='bg-[#A0D8EF] rounded-full mt-[30px] px-14 py-3 font-medium' onClick={CreateUser}>
           Become a member
         </button>
         <p className='mt-[10px] w-[280px] text-center'>
