@@ -8,6 +8,7 @@ import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 
 
+
 export default function App({ Component, pageProps }: AppProps) {
 
   const network = "mainnet-beta";

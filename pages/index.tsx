@@ -1,15 +1,16 @@
 
-import { Inter, } from '@next/font/google'
+import { Inter, Solway, } from '@next/font/google'
 import { MdOutlineAdd, MdOutlineDone } from 'react-icons/md'
 import { AnchorProvider, Wallet } from '@project-serum/anchor'
 import { SocialProtocol } from '@spling/social-protocol'
-import { AnchorWallet, useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
+import { AnchorWallet, useAnchorWallet, useWallet, WalletContextState } from '@solana/wallet-adapter-react'
 import { clusterApiUrl, ConfirmOptions, Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { FileData, ProtocolOptions, User } from '@spling/social-protocol/dist/types'
+import { FileData, Group, ProtocolOptions, User } from '@spling/social-protocol/dist/types'
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 
 declare global {
   interface Window {
@@ -31,9 +32,14 @@ const options = {
 const inter = Inter({ subsets: ['latin'] })
 const network = "https://rpc.helius.xyz/?api-key=07172e08-2375-4358-9ad1-522bd8871a8e"
 
+const WalletMultiButtonDynamic = dynamic(
+  async()=>(await import ('@solana/wallet-adapter-react-ui')).WalletMultiButton,
+  {ssr:false}
+)
+
 export default function Home() {
   const [socialProtocol, setSocialProtocol] = useState<SocialProtocol>()
-  const [walletAddress, setWalletAddress] = useState()
+  const [walletAddress, setWalletAddress] = useState<WalletContextState>()
   const [userInfo, setUserInfo] = useState<User | null>()
   const [loading, setLoading] = useState<boolean>(false)
   const [cardio, setCardio] = useState<boolean>(false)
@@ -67,39 +73,6 @@ export default function Home() {
     }
   }
 
-  const connectWallet = async () => {
-    const { solana } = window;
-    const response = await solana.connect()
-    console.log('Connected to Public Key : ', response.publicKey.toString())
-    setWalletAddress(response.publicKey.toString())
-    if (response) {
-      const provider = getProvider()
-      const socialProtocol: SocialProtocol = await new SocialProtocol(solWal, null, options).init()
-      setSocialProtocol(socialProtocol);
-      const userInfo = await socialProtocol.getUserByPublicKey(provider.wallet.publicKey)
-      console.log(userInfo)
-      const group = await socialProtocol.getUserGroup(provider.wallet.publicKey)
-      //const group: Group = await socialProtocol.createGroup("Weight", "A group that contains posts related to Weight Training",null);
-      console.log(group);
-    }
-  }
-
-  const getProvider = () => {
-    const connection = new Connection(network, 'processed')
-    const provider = new AnchorProvider(connection, window.solana, opts)
-    return provider;
-  }
-
-  const Initialize = async () => {
-    console.log(solWal)
-    const provider = getProvider()
-
-    const socialProtocol: SocialProtocol = await new SocialProtocol(provider.wallet as Wallet, null, options).init()
-    setSocialProtocol(socialProtocol);
-    const userInfo = await socialProtocol.getUserByPublicKey(provider.wallet.publicKey)
-    setUserInfo(userInfo)
-    console.log(userInfo)
-  }
 
   const CreateUser = async () => {
     if(userName.length === 0){
@@ -158,9 +131,10 @@ export default function Home() {
     return (
       <>
         <h2 className='text-2xl mt-[180px]'>Welcome to Spling Gym</h2>
-        <button className='bg-[#A0D8EF] rounded-full mt-[40px] px-10 py-1 font-medium' onClick={connectWallet}>
+        {/* <button className='bg-[#A0D8EF] rounded-full mt-[40px] px-10 py-1 font-medium' onClick={connectWallet}>
           Connect
-        </button>
+        </button> */}
+        <WalletMultiButtonDynamic />
         <p className='mt-[10px] w-[220px] text-center'>
           Connect your phantom wallet to continue
         </p>
@@ -268,28 +242,19 @@ export default function Home() {
           <img src="./IMG_0166.JPG" alt='running' className='w-1/2 rounded-l-[150px]' />
           <div className='flex flex-col items-center w-1/2 bg-slate-200 rounded-r-[150px]'>
             <img src='./Logo.png' alt='Spling Gym' className='mt-[150px]' />
-            {walletAddress ? (!userInfo ? CreateUserUI() : <div></div>) : ConnectUI()}
+            {walletAddress?.wallet?.adapter?.publicKey ? (!userInfo ? CreateUserUI() : <div></div>) : ConnectUI()}
           </div>
         </div>
       </div>)
   }
 
   const renderConnectedContainer = () => {
-    return (
-      <div>
-        <button className="mt-[150px] justify-start border-white border-[1px] w-fit p-2 rounded-md" onClick={Initialize}>
-          Initialize
-        </button>
-        <button className="mt-[150px] justify-start border-white border-[1px] w-fit p-2 rounded-md" onClick={CreateUser}>
-          Create User
-        </button>
-      </div>
-    );
+
   }
 
   useEffect(() => {
-
-  }, [])
+    setWalletAddress(solWal);
+  }, [solWal,walletAddress])
 
   return (
     <div>
