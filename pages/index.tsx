@@ -11,6 +11,7 @@ import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
+import GroupFeed from '../components/GroupFeed'
 
 declare global {
   interface Window {
@@ -33,8 +34,8 @@ const inter = Inter({ subsets: ['latin'] })
 const network = "https://rpc.helius.xyz/?api-key=07172e08-2375-4358-9ad1-522bd8871a8e"
 
 const WalletMultiButtonDynamic = dynamic(
-  async()=>(await import ('@solana/wallet-adapter-react-ui')).WalletMultiButton,
-  {ssr:false}
+  async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
+  { ssr: false }
 )
 
 export default function Home() {
@@ -45,10 +46,10 @@ export default function Home() {
   const [cardio, setCardio] = useState<boolean>(false)
   const [weight, setWeight] = useState<boolean>(false)
   const [yoga, setYoga] = useState<boolean>(false)
-  const [userName,setUserName]=useState<string>('')
-  const [avatar,setAvatar] = useState<File>()
+  const [userName, setUserName] = useState<string>('')
+  const [avatar, setAvatar] = useState<File>()
 
-  const avatarRef=useRef<HTMLInputElement>(null)
+  const avatarRef = useRef<HTMLInputElement>(null)
 
   const solWal = useWallet()
 
@@ -75,40 +76,40 @@ export default function Home() {
 
 
   const CreateUser = async () => {
-    if(userName.length === 0){
+    if (userName.length === 0) {
       return console.error('Enter Name to Continue');
     }
 
-    
+
 
     if (socialProtocol) {
-      if(avatar){
+      if (avatar) {
         const profileImage = avatar;
         let base64Img = await convertBase64(profileImage)
         const FileDataValue = {
-          base64: base64Img ,
+          base64: base64Img,
           size: avatar.size,
           type: avatar.type,
         };
 
-        if(cardio || weight || yoga){
+        if (cardio || weight || yoga) {
           const bio = {
-            Cardio : cardio,
-            Weight : weight,
-            Yoga : yoga
+            Cardio: cardio,
+            Weight: weight,
+            Yoga: yoga
           }
           const user: User = await socialProtocol.createUser(userName, FileDataValue as FileData, JSON.stringify(bio))
           // const user: User = await socialProtocol.createUser("Anoy", null, "God")
           console.log(user)
         }
-        else{
+        else {
           return console.error('Please select atleast one category to continue');
         }
-        
-      }else{
+
+      } else {
         return console.error('Upload avatar to Continue');
       }
-      
+
     }
   }
 
@@ -146,49 +147,49 @@ export default function Home() {
     return (
       <>
         <h2 className='text-3xl mt-[40px] font-normal'>It seems you are a newbie</h2>
-        <input 
-          value={userName} 
-          type='text' 
-          placeholder="Name" 
-          className='rounded-2xl my-[20px] p-2 w-[300px] border-4 border-[#A0D8EF] focus:outline-none text-[#565656] bg-slate-200' 
-          onChange={(e)=>{
-            if(e.target)
-            setUserName(e.target.value)
+        <input
+          value={userName}
+          type='text'
+          placeholder="Name"
+          className='rounded-2xl my-[20px] p-2 w-[300px] border-4 border-[#A0D8EF] focus:outline-none text-[#565656] bg-slate-200'
+          onChange={(e) => {
+            if (e.target)
+              setUserName(e.target.value)
           }}
         />
 
         <div className='flex flex-row justify-around'>
-          <div 
-            onClick={()=>{
+          <div
+            onClick={() => {
               avatarRef?.current?.click()
             }}
             className='h-[140px] w-[140px] rounded-full hover:cursor-pointer'
           >
             {avatar ? (
-              <img 
-                onClick={()=>{
+              <img
+                onClick={() => {
                   avatarRef?.current?.click()
                 }}
                 src={URL.createObjectURL(avatar)}
                 alt='avatar'
                 className='rounded-full h-[140px] w-[140px] border-4 border-[#A0D8EF]'
               />
-            ):(
-              <img src='/ProfilePic.png' alt='ProfilePic'/>
+            ) : (
+              <img src='/ProfilePic.png' alt='ProfilePic' />
             )}
           </div>
-          <input 
+          <input
             type="file"
             className="hidden"
             ref={avatarRef}
-            onChange={(e)=>{
-              if(!e.target.files)
+            onChange={(e) => {
+              if (!e.target.files)
                 return
               setAvatar(e.target.files[0])
               console.log(e.target.files[0].type)
             }}
           />
-         
+
           <div className='flex flex-col justify-start'>
             <div className='flex flex-row text-left mb-[10px]'>
               <button className={`${cardio ? `bg-[#A9EFA0]` : `bg-[#A0D8EF]`} rounded-full mx-[10px] px-10 py-1 font-normal hover:cursor-default`}>
@@ -237,14 +238,21 @@ export default function Home() {
 
   const renderNotConnectedContainer = () => {
     return (
-      <div className="bg-[#747474] h-screen flex justify-center items-center">
-        <div className="flex flex-row  text-[#565656] w-[1280px] h-[720px] rounded-[150px]">
-          <img src="./IMG_0166.JPG" alt='running' className='w-1/2 rounded-l-[150px]' />
-          <div className='flex flex-col items-center w-1/2 bg-slate-200 rounded-r-[150px]'>
-            <img src='./Logo.png' alt='Spling Gym' className='mt-[150px]' />
-            {walletAddress?.wallet?.adapter?.publicKey ? (!userInfo ? CreateUserUI() : <div></div>) : ConnectUI()}
-          </div>
-        </div>
+      <div className="bg-[#747474] h-screen flex  justify-center">
+
+        {!userInfo ? (
+          <div className="bg-[#747474] h-screen flex justify-center items-center">
+            <div className="flex flex-row  text-[#565656] w-[1280px] h-[720px] rounded-[150px]">
+              <img src="./IMG_0166.JPG" alt='running' className='w-1/2 rounded-l-[150px]' />
+              <div className='flex flex-col items-center w-1/2 bg-slate-200 rounded-r-[150px]'>
+                <img src='./Logo.png' alt='Spling Gym' className='mt-[150px]' />
+                {walletAddress?.wallet?.adapter?.publicKey ? (!userInfo ? CreateUserUI() : <div></div>) : ConnectUI()}
+              </div>
+            </div>
+          </div>)
+          :
+          <GroupFeed socialProtocol={socialProtocol} walletAddress={walletAddress}/>}
+
       </div>)
   }
 
@@ -254,7 +262,21 @@ export default function Home() {
 
   useEffect(() => {
     setWalletAddress(solWal);
-  }, [solWal,walletAddress])
+
+    const initialize = async () => {
+      if (walletAddress?.wallet?.adapter?.publicKey) {
+        const socialProtocol: SocialProtocol = await new SocialProtocol(solWal, null, options).init()
+        setSocialProtocol(socialProtocol)
+
+        const user = await socialProtocol.getUserByPublicKey(walletAddress?.wallet?.adapter?.publicKey)
+        setUserInfo(user)
+        console.log(user)
+        //const group: Group = await socialProtocol.createGroup("Yoga", "A group that contains posts related to Yoga",null);
+        // console.log(group)
+      }
+    }
+    initialize()
+  }, [solWal, walletAddress])
 
   return (
     <div>
