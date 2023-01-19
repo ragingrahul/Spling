@@ -49,7 +49,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                         alt="avatar"
                         className='rounded-full h-[80px] w-[80px] border-4 border-[#A0D8EF]'
                     />:
-                    <img src='/ProfilePic.png' alt='ProfilePic' />
+                    <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[80px] w-[80px] border-4 border-[#A0D8EF]' />
                     }
                 </div>
 
