@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Chillax-Regular';
+    font-family: 'Chillax';
     src: url('./fonts/Chillax-Regular.woff2') format('woff2'),
          url('./fonts/Chillax-Regular.woff') format('woff');
          font-weight: 400;

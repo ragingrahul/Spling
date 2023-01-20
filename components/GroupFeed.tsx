@@ -6,11 +6,11 @@ import { FileData } from "@spling/social-protocol"
 
 import { NextPage } from "next"
 import { Test } from "./TestSet"
-import { TypeOfExpression } from "typescript"
 import Posts from "./Post"
 
 
-const post1 = { exercise: "Running" }
+const post1 = { exercise: "Biceps + Triceps" ,current:20, target:50 }
+
 
 
 
@@ -34,7 +34,7 @@ const convertBase64 = (file: File) => {
 };
 const GroupFeed: NextPage<Props> = (props: Props) => {
     const [userInfo, setUserInfo] = useState<User | null>()
-    const [posts, setPosts] = useState<typeof Test>();
+    const [posts, setPosts] = useState<Post[]>();
     const [imgAdd,setImgAddress]=useState<string>()
     const [images, setImages] = useState<File>()
 
@@ -55,30 +55,24 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                 type: images.type,
 
             };
-            const post = await props.socialProtocol?.createPost(15, "Completion", JSON.stringify(post1), FileDataValue as FileData)
+            
         }
 
     }
     useEffect(() => {
         const initialize = async () => {
-            setPosts(Test);
             if (props.walletAddress?.wallet?.adapter?.publicKey) {
                 const user = await props.socialProtocol?.getUserByPublicKey(props.walletAddress?.wallet?.adapter?.publicKey)
                 setUserInfo(user)
-                console.log(user)
-                const group = await props.socialProtocol?.getGroup(15)
-                console.log(group)
                 if (props.socialProtocol !== null && props.socialProtocol!== undefined) {
                     const posted:Post[] = await props.socialProtocol.getAllPosts(15)
-                    console.log(posted)
-                    
-                    
-                     if(posted.length>1){
-                        if(posted[1].media[0].file)
-                            setImgAddress(posted[1].media[0].file)
-                          //console.log(posted[1].publicKey)
-                          //await props.socialProtocol?.deletePost(posted[1].publicKey)
-                     }
+                    setPosts(posted)
+                    //  if(posted.length>1){
+                    //     if(posted[1].media[0].file)
+                    //         setImgAddress(posted[1].media[0].file)
+                    //       console.log(posted[1].publicKey)
+                    //       await props.socialProtocol?.deletePost(posted[1].publicKey)
+                    //  }
                     
                 }
 
@@ -97,7 +91,8 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
     }, [])
 
     return (
-        <div className=' flex flex-col w-[960px]'>
+        <div className="bg-[#747474] h-fit w-max flex justify-center">
+        <div className=' flex flex-col w-[960px] h-fit'>
             <div className='bg-slate-200 text-[#565656] flex flex-row rounded-b-3xl p-7'>
                 <div className="flex flex-col w-1/2">
                     <img src="/Logo.png" alt="logo" className="w-[240px]" />
@@ -129,6 +124,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                 </div>
             </div>
             {posts?.map((postObj, index) => <Posts key={index} post={postObj} socialProtocol={props.socialProtocol} walletAddress={props.walletAddress} />)}
+        </div>
         </div>
     )
 }
