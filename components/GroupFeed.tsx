@@ -67,12 +67,12 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                 if (props.socialProtocol !== null && props.socialProtocol!== undefined) {
                     const posted:Post[] = await props.socialProtocol.getAllPosts(15)
                     setPosts(posted)
+                    console.log(posted)
                     //  if(posted.length>1){
-                    //     if(posted[1].media[0].file)
-                    //         setImgAddress(posted[1].media[0].file)
-                    //       console.log(posted[1].publicKey)
-                    //       await props.socialProtocol?.deletePost(posted[1].publicKey)
-                    //  }
+                    //     console.log(posted[0].publicKey.toString())
+                    //     await props.socialProtocol.deletePost(posted[0].publicKey)
+                    //     console.log(posted)
+                    // }
                     
                 }
 
@@ -91,7 +91,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
     }, [])
 
     return (
-        <div className="bg-[#747474] h-fit w-max flex justify-center">
+        <div className="bg-[#747474] h-fit w-full flex justify-center">
         <div className=' flex flex-col w-[960px] h-fit'>
             <div className='bg-slate-200 text-[#565656] flex flex-row rounded-b-3xl p-7'>
                 <div className="flex flex-col w-1/2">

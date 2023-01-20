@@ -1,5 +1,5 @@
 import { NextPage } from "next"
-import { Post, SocialProtocol, Reply } from "@spling/social-protocol"
+import { Post, SocialProtocol, Reply,User } from "@spling/social-protocol"
 import { WalletContextState } from "@solana/wallet-adapter-react"
 import { useEffect, useState } from "react"
 
@@ -8,9 +8,15 @@ interface Props {
     socialProtocol:SocialProtocol|undefined,
     walletAddress:WalletContextState|undefined,
 }
+type PostText={
+    exercise:string,
+    current:number,
+    target:number,
+}
 
 const Posts: NextPage<Props> = (props: Props) => {
     const [text, setText] = useState<any>();
+    const [userInfo, setUserInfo] =useState<User | null>()
     const [current, setCurrent] = useState<any>();
     const [target, setTarget] = useState<any>();
     const [replies, setReplies] = useState<any>();
@@ -18,21 +24,49 @@ const Posts: NextPage<Props> = (props: Props) => {
     const [type, setType] = useState("Progression")
     useEffect(()=>{
         const InitializePost = async() => {
+        if(props?.walletAddress?.publicKey){
+            const user=await props.socialProtocol?.getUserByPublicKey(props?.walletAddress?.publicKey)
+            setUserInfo(user)
+        }
+            
         if(props?.post?.text && props?.post?.postId && props?.post?.title){
             //let test: any = JSON.parse(props?.post?.text)
             const replies: Reply[] | undefined = await props?.socialProtocol?.getAllPostReplies(props?.post?.postId)
             setReplies(replies);
             console.log(props?.post)
-            setText(props?.post?.text?.exercise);
-            setCurrent(props?.post?.text?.current);
-            setTarget(props?.post?.text?.target);
+            const customObject=JSON.parse(JSON.stringify(props?.post?.text))
+            setText(customObject.exercise);
+            setCurrent(customObject.current);
+            setTarget(customObject.target);
             setType(props?.post?.title)
+            const check=props?.post.likes.find((userId)=>{return userId==userInfo?.userId;})
+            console.log(check)
+            if(check){
+                setLike(false)
+            }else{
+                //console.log(check)
+                setLike(true)
+            }
+                
         }
+        
         }
         InitializePost();
-    },[])
+    },[like])
 
-    const AddLike = () => {
+    const AddLike = async() => {
+        if(props?.post){
+            await props.socialProtocol?.likePost(props?.post?.publicKey)
+            const check=props?.post.likes.find((userId)=>{return userId==userInfo?.userId;})
+            console.log(check)
+            if(check){
+                setLike(false)
+            }else{
+                //console.log(check)
+                setLike(true)
+            }
+        }
+            
         setLike(!like)
     }
     return (

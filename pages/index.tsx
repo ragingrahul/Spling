@@ -238,10 +238,10 @@ export default function Home() {
 
   const renderNotConnectedContainer = () => {
     return (
-      <div className="bg-[#747474] h-screen flex  justify-center">
+      <div className="bg-[#747474] h-screen flex justify-center">
 
         {!userInfo ? (
-          <div className="bg-[#747474] h-max flex justify-center items-center">
+          <div className="bg-[#747474] h-screen flex items-center justify-center">
             <div className="flex flex-row  text-[#565656] w-[1280px] h-[720px] rounded-[150px]">
               <img src="./IMG_0166.JPG" alt='running' className='w-1/2 rounded-l-[150px]' />
               <div className='flex flex-col items-center w-1/2 bg-slate-200 rounded-r-[150px]'>
