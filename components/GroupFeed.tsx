@@ -3,6 +3,9 @@ import { useWallet, WalletContextState } from "@solana/wallet-adapter-react"
 import { ProtocolOptions, User } from "@spling/social-protocol"
 import { useEffect, useState, useRef } from "react"
 import { NextPage } from "next"
+import { Test } from "./TestSet"
+import { TypeOfExpression } from "typescript"
+import Post from "./Post"
 
 interface Props {
     socialProtocol: SocialProtocol | undefined;
@@ -11,6 +14,7 @@ interface Props {
 
 const GroupFeed: NextPage<Props> = (props: Props) => {
     const [userInfo, setUserInfo] = useState<User | null>()
+    const [posts, setPosts] = useState<typeof Test>();
 
     const getTruncatedAddress = (address: string | undefined) => {
         if (!address) {
@@ -22,6 +26,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
 
     useEffect(() => {
         const initialize = async () => {
+            setPosts(Test);
             if (props.walletAddress?.wallet?.adapter?.publicKey) {
                 const user = await props.socialProtocol?.getUserByPublicKey(props.walletAddress?.wallet?.adapter?.publicKey)
                 setUserInfo(user)
@@ -32,7 +37,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
     }, [])
 
     return (
-        <div className=' flex flex-col w-1/2'>
+        <div className=' flex flex-col w-[960px]'>
             <div className='bg-slate-200 text-[#565656] flex flex-row rounded-b-3xl p-7'>
                 <div className="flex flex-col w-1/2">
                     <img src="/Logo.png" alt="logo" className="w-[240px]" />
@@ -52,9 +57,8 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                     <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[80px] w-[80px] border-4 border-[#A0D8EF]' />
                     }
                 </div>
-
             </div>
-
+            {posts?.map((postObj,index)=><Post key={index} post={postObj}/>)}
         </div>
     )
 }
