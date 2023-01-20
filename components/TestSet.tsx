@@ -1,7 +1,7 @@
 export const Test = [
     {
         user : "HGXGqwS8vJuSjwC2QMYiqUA7GbSc7uQQH5cQ7qQiDvjC",
-        text : `{type : "Progression", exercise : "Biceps + Triceps" , current : 70, target : 110 }`,
+        text : `{type : "Progression", exercise : "Running" , current : 3 KM, target : 5 KM }`,
         image : null,
         GroupID : "Cardio",
         comments : [

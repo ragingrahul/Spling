@@ -1,11 +1,14 @@
 import { NextPage } from "next"
-
+import { SocialProtocol } from "@spling/social-protocol"
+import { WalletContextState } from "@solana/wallet-adapter-react"
 
 interface Props {
-    post:{} | undefined
+    post:{} | undefined,
+    socialProtocol:SocialProtocol|undefined,
+    walletAddress:WalletContextState|undefined,
 }
 
-const Post: NextPage<Props> = (props: Props) => {
+const Posts: NextPage<Props> = (props: Props) => {
     
     return (<div className="w-[107.5%] rounded-2xl self-end mt-7 flex justify-between">
             <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[60px] w-[60px] border-4 border-[#A0D8EF]' />
@@ -14,4 +17,4 @@ const Post: NextPage<Props> = (props: Props) => {
     </div>)
 }
 
-export default Post
+export default Posts
