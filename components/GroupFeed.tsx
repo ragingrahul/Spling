@@ -66,7 +66,6 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                 setUserInfo(user)
                 if (props.socialProtocol !== null && props.socialProtocol!== undefined) {
                     const posted:Post[] = await props.socialProtocol.getAllPosts(16)
-                    const posted:Post[] = await props.socialProtocol.getAllPosts(16)
                     setPosts(posted)
                     console.log(posted)
                     // if(posted.length>1){
