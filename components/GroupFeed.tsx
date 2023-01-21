@@ -65,11 +65,11 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                 const user = await props.socialProtocol?.getUserByPublicKey(props.walletAddress?.wallet?.adapter?.publicKey)
                 setUserInfo(user)
                 if (props.socialProtocol !== null && props.socialProtocol!== undefined) {
-                    const posted:Post[] = await props.socialProtocol.getAllPosts(15)
+                    const posted:Post[] = await props.socialProtocol.getAllPosts(16)
                     setPosts(posted)
-                    //  if(posted.length>1){
-                    //     console.log(posted[0].publicKey.toString())
-                    //     await props.socialProtocol.deletePost(posted[0].publicKey)
+                    // if(posted.length>1){
+                    //     console.log(posted[1].publicKey.toString())
+                    //     await props.socialProtocol.deletePost(posted[1].publicKey)
                     //     console.log(posted)
                     // }
                     
@@ -83,7 +83,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                 // };
 
                 //const post=await props.socialProtocol?.createPost(15,"Completion",JSON.stringify(post1),null)
-                //console.log(post)
+                
             }
         }
         initialize()
@@ -122,7 +122,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                     }
                 </div>
             </div>
-            {posts?.map((postObj, index) => <Posts key={index} post={postObj} socialProtocol={props.socialProtocol} walletAddress={props.walletAddress} user = {userInfo}/>)}
+            {posts?.map((postObj, index) => <Posts key={index} post={postObj} socialProtocol={props.socialProtocol} walletAddress={props.walletAddress} user = {userInfo}/>)} 
         </div>
         </div>
     )
