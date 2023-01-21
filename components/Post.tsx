@@ -57,14 +57,7 @@ const Posts: NextPage<Props> = (props: Props) => {
     const AddLike = async() => {
         if(props?.post){
             await props.socialProtocol?.likePost(props?.post?.publicKey)
-            const check=props?.post.likes.find((userId)=>{return userId==userInfo?.userId;})
-            console.log(check)
-            if(check){
-                setLike(false)
-            }else{
-                //console.log(check)
-                setLike(true)
-            }
+            
         }
             
         setLike(!like)
