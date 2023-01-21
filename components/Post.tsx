@@ -52,6 +52,7 @@ const Posts: NextPage<Props> = (props: Props) => {
     const AddLike = async() => {
         if(props?.post){
             await props.socialProtocol?.likePost(props?.post?.publicKey)
+            
         }
             
         setLike(!like)
