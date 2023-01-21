@@ -67,7 +67,6 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                 if (props.socialProtocol !== null && props.socialProtocol!== undefined) {
                     const posted:Post[] = await props.socialProtocol.getAllPosts(15)
                     setPosts(posted)
-                    console.log(posted)
                     //  if(posted.length>1){
                     //     console.log(posted[0].publicKey.toString())
                     //     await props.socialProtocol.deletePost(posted[0].publicKey)
@@ -123,7 +122,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                     }
                 </div>
             </div>
-            {posts?.map((postObj, index) => <Posts key={index} post={postObj} socialProtocol={props.socialProtocol} walletAddress={props.walletAddress} />)}
+            {posts?.map((postObj, index) => <Posts key={index} post={postObj} socialProtocol={props.socialProtocol} walletAddress={props.walletAddress} user = {userInfo}/>)}
         </div>
         </div>
     )
