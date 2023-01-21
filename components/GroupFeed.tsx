@@ -65,8 +65,9 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
                 const user = await props.socialProtocol?.getUserByPublicKey(props.walletAddress?.wallet?.adapter?.publicKey)
                 setUserInfo(user)
                 if (props.socialProtocol !== null && props.socialProtocol!== undefined) {
-                    const posted:Post[] = await props.socialProtocol.getAllPosts(15)
+                    const posted:Post[] = await props.socialProtocol.getAllPosts(16)
                     setPosts(posted)
+                    console.log(posted)
                     //  if(posted.length>1){
                     //     console.log(posted[0].publicKey.toString())
                     //     await props.socialProtocol.deletePost(posted[0].publicKey)
@@ -91,7 +92,7 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
 
     return (
         <div className="bg-[#747474] h-fit w-full flex justify-center">
-        <div className=' flex flex-col w-[960px] h-fit'>
+        <div className=' flex flex-col w-[960px] h-fit ml-28'>
             <div className='bg-slate-200 text-[#565656] flex flex-row rounded-b-3xl p-7'>
                 <div className="flex flex-col w-1/2">
                     <img src="/Logo.png" alt="logo" className="w-[240px]" />
@@ -124,6 +125,9 @@ const GroupFeed: NextPage<Props> = (props: Props) => {
             </div>
             {posts?.map((postObj, index) => <Posts key={index} post={postObj} socialProtocol={props.socialProtocol} walletAddress={props.walletAddress} user = {userInfo}/>)}
         </div>
+        <button className="h-[100px] w-[100px] bg-[#A0D8EF] rounded-full sticky top-[86%] right-[8%] ml-5 flex justify-center items-center" onClick={()=>{window.location.href='./CreatePost'}}>
+            <img src='/Add White.png' alt='Add Sign' className="h-1/2 w-1/2" />
+        </button>
         </div>
     )
 }

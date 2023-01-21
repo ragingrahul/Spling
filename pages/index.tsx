@@ -251,7 +251,8 @@ export default function Home() {
             </div>
           </div>)
           :
-          <GroupFeed socialProtocol={socialProtocol} walletAddress={walletAddress}/>}
+          <GroupFeed socialProtocol={socialProtocol} walletAddress={walletAddress}/>
+          }
 
       </div>)
   }
