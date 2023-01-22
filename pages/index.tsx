@@ -12,6 +12,8 @@ import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapte
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import GroupFeed from '../components/GroupFeed'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 declare global {
   interface Window {
@@ -72,7 +74,7 @@ export default function Home() {
 
   const CreateUser = async () => {
     if (userName.length === 0) {
-      return console.error('Enter Name to Continue');
+      return toast.warn('Enter Name to Continue');
     }
 
 
@@ -93,16 +95,25 @@ export default function Home() {
             Weight: weight,
             Yoga: yoga
           }
-          const user: User = await socialProtocol.createUser(userName, FileDataValue as FileData, JSON.stringify(bio))
-          // const user: User = await socialProtocol.createUser("Anoy", null, "God")
-          console.log(user)
+          const promise = async() => {
+            const user: User = await socialProtocol.createUser(userName, FileDataValue as FileData, JSON.stringify(bio))
+            console.log(user)
+          }
+          toast.promise(
+            promise(),
+            {
+              pending: 'Creating Profile',
+              success: 'Profile Created',
+              error: 'Error Creating Profile'
+            }
+          )
         }
         else {
-          return console.error('Please select atleast one category to continue');
+          return toast.warn('Please select atleast one category to continue');
         }
 
       } else {
-        return console.error('Upload avatar to Continue');
+        return toast.warn('Upload Avatar to Continue');
       }
 
     }
@@ -229,16 +240,19 @@ export default function Home() {
           <div className='flex flex-col items-center w-1/2 bg-slate-200 rounded-r-[150px]'>
             <img src='./Logo.png' alt='Spling Gym' className='mt-[150px]' />
             <h1 className='m-5 text-2xl font-[Chillax]'>User Profile</h1>
-            {userInfo?.avatar && <img src={userInfo?.avatar} className='h-[160px] w-[160px] rounded-full ' />}
-            <h1 className='m-5 text-2xl font-[Chillax]'>Interests</h1>
+            {userInfo?.avatar && <img src={userInfo?.avatar} className='h-[160px] w-[160px] rounded-full border-[#A0D8EF] border-4' />}
+            <h1 className='mx-5 mt-5 text-2xl font-[Chillax]'>Interests</h1>
             <div className='flex flex-row'>
-              {(bio?.Cardio) && <h1 className='m-2 text-xl font-medium'>Cardio</h1>}
-              {(bio?.Weight) && <h1 className='m-2 text-xl font-medium'>Weight</h1>}
-              {(bio?.Yoga) && <h1 className='m-2 text-xl font-medium'>Yoga</h1>}
+              {(bio?.Cardio) && <div className='bg-[#A0D8EF] rounded-full p-2 m-2 text-l px-4 font-medium'>Cardio</div>}
+              {(bio?.Weight) && <h1 className='bg-[#A0D8EF] rounded-full p-2 m-2 text-l px-4 font-medium'>Weight Training</h1>}
+              {(bio?.Yoga) && <h1 className='bg-[#A0D8EF] rounded-full p-2 m-2 text-l px-4 font-medium'>Yoga</h1>}
             </div>
             <button className='bg-[#A0D8EF] rounded-full mt-[30px] px-14 py-3 font-medium' onClick={()=>window.location.href="/GroupFeed"}>
               Feed
             </button>
+            <p className='mt-[10px] w-[280px] text-center'>
+              Add, Browse and Interact with posts from our fitness community 
+            </p>
           </div>
         </div>
       </div>
@@ -267,38 +281,52 @@ export default function Home() {
       </div>)
   }
 
-  const renderConnectedContainer = () => {
-
-  }
-
   useEffect(() => {
     setWalletAddress(solWal);
 
     const initialize = async () => {
       if (walletAddress?.wallet?.adapter?.publicKey) {
-        const socialProtocol: SocialProtocol = await new SocialProtocol(solWal, null, options).init()
-        setSocialProtocol(socialProtocol)
+        const socialProtocol: SocialProtocol = await new SocialProtocol(
+          solWal,
+          null,
+          options
+        ).init();
+        setSocialProtocol(socialProtocol);
 
-        const user = await socialProtocol.getUserByPublicKey(walletAddress?.wallet?.adapter?.publicKey)
-        setUserInfo(user)
-        console.log(user)
-        if (user?.bio) {
-          let bios: any = JSON.parse(user?.bio)
-
-          setBio(bios)
-
+        const promise = async () => {
+          if (walletAddress?.wallet?.adapter?.publicKey) {
+            const user = await socialProtocol.getUserByPublicKey(
+              walletAddress?.wallet?.adapter?.publicKey
+            );
+            setUserInfo(user);
+          }
+        };
+        toast.promise(promise(), {
+          pending: "Initializing",
+          success: "Profile Initialized",
+          error: "Error Initializing",
+        });
+        if (userInfo?.bio) {
+          let bios: any = JSON.parse(userInfo?.bio);
+          setBio(bios);
         }
-
-        //const group: Group = await socialProtocol.createGroup("Yoga", "A group that contains posts related to Yoga",null);
-        // console.log(group)
       }
-    }
-    initialize()
-  }, [solWal, walletAddress])
+    };
+    initialize();
+  }, [solWal,walletAddress]);
 
   return (
     <div>
       {renderNotConnectedContainer()}
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        draggable
+      />
     </div>
-  )
+  );
 }

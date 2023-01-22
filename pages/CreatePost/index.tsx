@@ -3,6 +3,8 @@ import { BiPlus } from 'react-icons/bi'
 import { SocialProtocol, User, ProtocolOptions, FileData } from '@spling/social-protocol';
 import { WalletContextState, useWallet } from '@solana/wallet-adapter-react';
 import { Console } from 'console';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const options = {
     rpcUrl: 'https://rpc.helius.xyz/?api-key=07172e08-2375-4358-9ad1-522bd8871a8e',
@@ -128,62 +130,113 @@ export default function CreatePost() {
     }
     const CreatePostProgression = async () => {
         //const post=await socialProtocol.createPost()
-        if (!exercise || !current || !target)
-            return console.error("Fill exercise/current/target")
+        
+          if (!exercise || !current || !target)
+            return toast.warn("Fill exercise/current/target");
 
-        const text = {
+          const text = {
             exercise,
             current,
-            target
-        }
-        if (!category) {
-            return console.error("Select a category")
-        }
-        if (category === "Cardio") {
-            const post = await socialProtocol?.createPost(15, "Progression", JSON.stringify(text), null)
-        }
-        else if (category === "Weight") {
-            const post = await socialProtocol?.createPost(16, "Progression", JSON.stringify(text), null)
-        }
-        else {
-            const post = await socialProtocol?.createPost(17, "Progression", JSON.stringify(text), null)
-        }
+            target,
+          };
+          if (!category) {
+            return toast.warn("Select a category");
+          }
+          const createPostInitialize = async () => {
+            if (category === "Cardio") {
+              const post = await socialProtocol?.createPost(
+                15,
+                "Progression",
+                JSON.stringify(text),
+                null
+              );
+            } else if (category === "Weight") {
+              const post = await socialProtocol?.createPost(
+                16,
+                "Progression",
+                JSON.stringify(text),
+                null
+              );
+            } else {
+              const post = await socialProtocol?.createPost(
+                17,
+                "Progression",
+                JSON.stringify(text),
+                null
+              );
+            }
 
-        window.location.href="./GroupFeed"
+            window.location.href = "/GroupFeed";
+          };
+          toast.promise(createPostInitialize(), {
+            pending: "processing, Transaction pending",
+            success: "Created a post",
+            error: "Error creating the post",
+          });
+        
+        
     }
 
     const CreatePostCompletion = async () => {
-        console.log(image?.type)
-        if (!category) {
-            return console.error("Select a category")
-        }
-        if (!exercise)
-            return console.error("Fill exercise")
-        if (image) {
+        
+          console.log(image?.type);
+          if (!category) {
+            return toast.warn("Select a category");
+          }
+          if (!exercise) return toast.warn("Fill exercise");
+          if (image) {
             if (image.size > 1000000)
-                return console.error("Upload image less than 1MB")
+              return toast.warn("Upload image less than 1MB");
             if (!image.type.includes("image"))
-                return console.error("Upload an image")
-
-
-            const profileImage = image;
-            let base64Img = await convertBase64(profileImage)
-            const FileDataValue = {
+              return toast.warn("Upload an image");
+          }
+          else{
+            return toast.warn('Upload a Image')
+          }
+          const createPostInitialize = async () => {
+            if (image) {
+              const profileImage = image;
+              let base64Img = await convertBase64(profileImage);
+              const FileDataValue = {
                 base64: base64Img,
                 size: image.size,
                 type: image.type,
-            };
-            if (category === "Cardio") {
-                const post = await socialProtocol?.createPost(15, "Completion", JSON.stringify({exercise}), FileDataValue as FileData, null)
+              };
+
+              if (category === "Cardio") {
+                const post = await socialProtocol?.createPost(
+                  15,
+                  "Completion",
+                  JSON.stringify({ exercise }),
+                  FileDataValue as FileData,
+                  null
+                );
+              } else if (category === "Weight") {
+                const post = await socialProtocol?.createPost(
+                  16,
+                  "Completion",
+                  JSON.stringify({ exercise }),
+                  FileDataValue as FileData,
+                  null
+                );
+              } else {
+                const post = await socialProtocol?.createPost(
+                  17,
+                  "Completion",
+                  JSON.stringify({ exercise }),
+                  FileDataValue as FileData,
+                  null
+                );
+              }
             }
-            else if (category === "Weight") {
-                const post = await socialProtocol?.createPost(16, "Completion", JSON.stringify({exercise}), FileDataValue as FileData, null)
-            }
-            else {
-                const post = await socialProtocol?.createPost(17, "Completion", JSON.stringify({exercise}), FileDataValue as FileData, null)
-            }
-        }
-        window.location.href="./GroupFeed"
+            window.location.href = "/GroupFeed";
+          };
+          toast.promise(createPostInitialize(), {
+            pending: "processing, Transaction pending",
+            success: "Created a post",
+            error: "Error creating the post",
+          });
+        
     }
 
     const onOptionChange = (e: any) => {
@@ -212,45 +265,117 @@ export default function CreatePost() {
         initialize()
     }, [solWal, walletAddress])
     return (
-        <div>
-            <div className="bg-[#747474] h-screen flex justify-center">
-                <div className='bg-slate-200 rounded-full h-24 w-24 -ml-40 mt-28 mr-14 flex items-center justify-center hover:cursor-pointer' onClick={()=>{window.location.href='./GroupFeed'}}>
-                    <img src='./Delete Black.png' />
+      <div>
+        <div className="bg-[#747474] h-screen flex justify-center">
+          <div
+            className="bg-slate-200 rounded-full h-24 w-24 -ml-40 mt-28 mr-14 flex items-center justify-center hover:cursor-pointer"
+            onClick={() => {
+              window.location.href = "./GroupFeed";
+            }}
+          >
+            <img src="./Delete Black.png" />
+          </div>
+
+          <div className="bg-[#747474] h-screen flex items-center justify-center">
+            <div className="flex flex-row  text-[#565656] w-[1280px] h-[720px] rounded-[150px]">
+              <img
+                src={progression ? "Progression.jpeg" : "Completion.png"}
+                alt="running"
+                className="w-1/2 rounded-l-[150px]"
+              />
+              <div className="flex flex-col items-center w-1/2 bg-slate-200 rounded-r-[150px]">
+                <img src="./Logo.png" alt="Spling Gym" className="mt-[120px]" />
+                <h1 className="mt-[20px] text-3xl">Add a Post</h1>
+                <h1 className="mt-[30px] text-lg font-semibold mb-[4px]">
+                  Select a type
+                </h1>
+                <div className="flex flex-row">
+                  <div
+                    className={`p-[3px] px-[20px] ${
+                      progression
+                        ? `bg-[#565656] text-slate-200`
+                        : `bg-[#A0D8EF]`
+                    } rounded-3xl font-semibold mx-[10px] border-2 border-[#A0D8EF] hover:cursor-pointer `}
+                    onClick={() => setProgression(true)}
+                  >
+                    Progression
+                  </div>
+                  <div
+                    className={`p-[3px] px-[20px] ${
+                      !progression
+                        ? `bg-[#565656] text-slate-200`
+                        : `bg-[#A0D8EF]`
+                    } rounded-3xl font-semibold mx-[10px] border-2 border-[#A0D8EF] hover:cursor-pointer `}
+                    onClick={() => setProgression(false)}
+                  >
+                    Completion
+                  </div>
+                </div>
+                <div className="flex flex-row mt-4 font-[Chillax]">
+                  <div className="flex items-center mx-2">
+                    <input
+                      id="default-radio-1"
+                      type="radio"
+                      value="Cardio"
+                      name="default-radio"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                      onClick={onOptionChange}
+                    />
+                    <label
+                      htmlFor="default-radio-1"
+                      className="ml-2 text-sm font-medium text-gray-900 "
+                    >
+                      Cardio
+                    </label>
+                  </div>
+                  <div className="flex items-center mx-2">
+                    <input
+                      id="default-radio-2"
+                      type="radio"
+                      value="Weight"
+                      name="default-radio"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                      onClick={onOptionChange}
+                    />
+                    <label
+                      htmlFor="default-radio-2"
+                      className="ml-2 text-sm font-medium text-gray-900"
+                    >
+                      Weight Training
+                    </label>
+                  </div>
+                  <div className="flex items-center mx-2">
+                    <input
+                      id="default-radio-3"
+                      type="radio"
+                      value="Yoga"
+                      name="default-radio"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 "
+                      onClick={onOptionChange}
+                    />
+                    <label
+                      htmlFor="default-radio-3"
+                      className="ml-2 text-sm font-medium text-gray-900"
+                    >
+                      Yoga
+                    </label>
+                  </div>
                 </div>
 
-                <div className="bg-[#747474] h-screen flex items-center justify-center">
-                    <div className="flex flex-row  text-[#565656] w-[1280px] h-[720px] rounded-[150px]">
-                        <img src="./IMG_0166.JPG" alt='running' className='w-1/2 rounded-l-[150px]' />
-                        <div className='flex flex-col items-center w-1/2 bg-slate-200 rounded-r-[150px]'>
-                            <img src='./Logo.png' alt='Spling Gym' className='mt-[120px]' />
-                            <h1 className="mt-[20px] text-3xl">Add a Post</h1>
-                            <h1 className="mt-[30px] text-lg font-semibold mb-[4px]">Select a type</h1>
-                            <div className="flex flex-row">
-                                <div className={`p-[3px] px-[20px] ${progression ? `bg-[#565656] text-slate-200` : `bg-[#A0D8EF]`} rounded-3xl font-semibold mx-[10px] border-2 border-[#A0D8EF] hover:cursor-pointer `} onClick={() => setProgression(true)}>Progression</div>
-                                <div className={`p-[3px] px-[20px] ${!progression ? `bg-[#565656] text-slate-200` : `bg-[#A0D8EF]`} rounded-3xl font-semibold mx-[10px] border-2 border-[#A0D8EF] hover:cursor-pointer `} onClick={() => setProgression(false)}>Completion</div>
-                            </div>
-                            <div className='flex flex-row mt-4 font-[Chillax]'>
-                                <div className="flex items-center mx-2">
-                                    <input id="default-radio-1" type="radio" value="Cardio" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" onClick={onOptionChange} />
-                                    <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-gray-900 ">Cardio</label>
-                                </div>
-                                <div className="flex items-center mx-2">
-                                    <input id="default-radio-2" type="radio" value="Weight" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" onClick={onOptionChange} />
-                                    <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-gray-900">Weight Training</label>
-                                </div>
-                                <div className="flex items-center mx-2">
-                                    <input id="default-radio-3" type="radio" value="Yoga" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 " onClick={onOptionChange} />
-                                    <label htmlFor="default-radio-3" className="ml-2 text-sm font-medium text-gray-900">Yoga</label>
-                                </div>
-                            </div>
-
-                            {progression ? ProgressionUI() : CompletionUI()}
-                        </div>
-                    </div>
-                </div>
-
-
+                {progression ? ProgressionUI() : CompletionUI()}
+              </div>
             </div>
+          </div>
         </div>
-    )
+        <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          draggable
+        />
+      </div>
+    );
 }
