@@ -3,6 +3,7 @@ import { Post, SocialProtocol, Reply,User } from "@spling/social-protocol"
 import { WalletContextState } from "@solana/wallet-adapter-react"
 import { useEffect, useState } from "react"
 import Replies from "./Replies"
+import { toast } from 'react-toastify';
 
 
 interface Props {
@@ -46,12 +47,18 @@ const Posts: NextPage<Props> = (props: Props) => {
     }, [props?.post?.likes, props?.user?.userId]);
 
     const AddLike = async() => {
-        if(props?.post){
-            await props.socialProtocol?.likePost(props?.post?.publicKey)
-            
+        const likeInitialize = async() => {
+            if(props?.post){
+                await props.socialProtocol?.likePost(props?.post?.publicKey)
+            }
+            setLike(!like)
         }
             
-        setLike(!like)
+        toast.promise(likeInitialize(), {
+            pending: "processing, Transaction pending",
+            success: !like ? "Liked a post" : "Unliked a post",
+            error: !like ? "Error liking the post" : "Error Unliking the post" ,
+          });
     }
 
     const ReplySection = () =>  {
@@ -83,14 +90,30 @@ const Posts: NextPage<Props> = (props: Props) => {
     }
 
     const SendReply = async() => {
-        if(props?.post?.postId && rep.length > 0 ){
-            const createdReply: Reply | undefined = await props?.socialProtocol?.createPostReply(props?.post?.postId, rep);
-            if(replies && createdReply){
-                const newReplies : Reply[] = [...replies,createdReply]
-                setReplies(newReplies);
-            }
-            setRep('');
+        if(!(rep.length > 0)){
+            return toast.warn('Write a comment first')
         }
+
+        const replyInitialize = async () => {
+          if (props?.post?.postId && rep.length > 0) {
+            const createdReply: Reply | undefined =
+              await props?.socialProtocol?.createPostReply(
+                props?.post?.postId,
+                rep
+              );
+            if (replies && createdReply) {
+              const newReplies: Reply[] = [...replies, createdReply];
+              setReplies(newReplies);
+            }
+            setRep("");
+          }
+        };
+
+        toast.promise(replyInitialize(), {
+            pending: "processing, Transaction pending",
+            success: "Replied to a post",
+            error: "Error adding reply",
+          });
     }
 
     const percBar = () => {
