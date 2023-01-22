@@ -149,7 +149,7 @@ export default function CreatePost() {
             const post = await socialProtocol?.createPost(17, "Progression", JSON.stringify(text), null)
         }
 
-        window.location.href="./"
+        window.location.href="./GroupFeed"
     }
 
     const CreatePostCompletion = async () => {
@@ -183,7 +183,7 @@ export default function CreatePost() {
                 const post = await socialProtocol?.createPost(17, "Completion", JSON.stringify({exercise}), FileDataValue as FileData, null)
             }
         }
-        window.location.href="./"
+        window.location.href="./GroupFeed"
     }
 
     const onOptionChange = (e: any) => {
@@ -201,6 +201,9 @@ export default function CreatePost() {
                 const user = await socialProtocol.getUserByPublicKey(walletAddress?.wallet?.adapter?.publicKey)
                 setUserInfo(user)
                 console.log(user)
+                if(!user){
+                    window.location.href='./'
+                }
                 //const group: Group = await socialProtocol.createGroup("Yoga", "A group that contains posts related to Yoga",null);
                 // console.log(group)
                 //await socialProtocol.deletePost()
