@@ -97,15 +97,20 @@ const Posts: NextPage<Props> = (props: Props) => {
         return(<div className='bg-[#A0D8EF] h-10 rounded-xl' style={{width:`${Math.ceil(current/target >= 1 ? 100 : current/target * 100)}%`}}></div>)
     }
     return (
-    <div className="w-[110%] rounded-2xl self-end mt-7 flex justify-between">
+    <div className="w-[120%] rounded-2xl self-end mt-7 flex justify-between">
+        <div className="flex flex-col w-48 items-end">
         {props?.post?.user?.avatar ? <img
             src={props?.post?.user?.avatar}
             alt="avatar"
-            className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF] hover:cursor-pointer' onClick={() => window.location.href=`./Dashboard/${props?.post?.userId}`}
+            className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF] hover:cursor-pointer mr-6' onClick={() => window.location.href=`./Dashboard/${props?.post?.userId}`}
         /> :
-            <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF] hover:cursor-pointer' onClick={() => window.location.href=`./Dashboard/${props?.post?.userId}`}/>
+            <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[70px] w-[70px] border-4 mr-6 border-[#A0D8EF] hover:cursor-pointer' onClick={() => window.location.href=`./Dashboard/${props?.post?.userId}`}/>
         }
-        <div className="flex flex-col w-[91%]">
+        <div className="flex flex-end h-fit w-fit mt-5 mr-6 relative">
+            <div className="bg-[#A0D8EF] p-3 rounded-full text-center text-[#565656] ">{props?.post?.groupId === 15 ? "Cardio" : props?.post?.groupId === 16 ? "Weight Training" : "Yoga"}</div>
+        </div>
+        </div>
+        <div className="flex flex-col w-[83.5%]">
         <div className="bg-slate-200 text-[#565656] flex flex-row rounded-2xl p-7 w-[100%] self-end z-2 relative">
             {(type == "Progression" &&
             <div className="flex flex-col w-[90%]">

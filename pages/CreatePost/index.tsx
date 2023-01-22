@@ -78,7 +78,7 @@ export default function CreatePost() {
     const CompletionUI = () => {
         return (
             <div className='flex flex-col'>
-                <div className='mt-8'>
+                <div className='mt-3'>
                     <input value={exercise} type="text" placeholder='Completed Exercise' className='w-[370px] my-3 p-1 bg-slate-200 border-2 border-[#A0D8EF] rounded-xl focus:outline-none text-[#565656] '
                         onChange={(e) => {
                             if (e.target)
@@ -214,7 +214,9 @@ export default function CreatePost() {
     return (
         <div>
             <div className="bg-[#747474] h-screen flex justify-center">
-
+                <div className='bg-slate-200 rounded-full h-24 w-24 -ml-40 mt-28 mr-14 flex items-center justify-center hover:cursor-pointer' onClick={()=>{window.location.href='./GroupFeed'}}>
+                    <img src='./Delete Black.png' />
+                </div>
 
                 <div className="bg-[#747474] h-screen flex items-center justify-center">
                     <div className="flex flex-row  text-[#565656] w-[1280px] h-[720px] rounded-[150px]">

@@ -61,7 +61,7 @@ export default function Dashboard() {
                 }
                 if (socialProtocol !== null && socialProtocol !== undefined) {
                     const posted: Post[] = await socialProtocol.getAllPosts(16)
-                    const filtered: Post[] = posted.filter((post)=>{return post.userId === userInfo?.userId})
+                    const filtered: Post[] = posted.filter((post)=>{return post?.userId === userInfo?.userId})
                     setPosts(filtered)
                     console.log(filtered)
                 }
@@ -82,6 +82,9 @@ export default function Dashboard() {
     return (
         <div className='bg-[#747474] h-screen flex justify-center'>
             <div className="bg-[#747474] h-fit w-full flex justify-center">
+            <div className='bg-slate-200 rounded-full h-24 w-24 -ml-10 mt-3 -mr-16 flex items-center justify-center hover:cursor-pointer' onClick={()=>{window.location.href='/GroupFeed'}}>
+                <img src='/Delete Black.png' />
+            </div>
                 <div className=' flex flex-col w-[960px] h-fit ml-28'>
                     <div className='bg-slate-200 text-[#565656] flex flex-row rounded-b-3xl p-7'>
                         <div className="flex flex-col w-1/2">
@@ -104,7 +107,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className='w-[100%] h-[25.2rem] bg-slate-200 rounded-2xl flex flex-col mt-5 mb-1'>
-                        <h1 className='my-5 text-4xl ml-7 text-[#565656] font-[Chillax]'>Your Interests</h1>
+                        <h1 className='my-5 text-4xl ml-7 text-[#565656] font-[Chillax]'>Category</h1>
                         <div className='flex flex-row w-[100%] h-72'>
                             <div className='bg-[#565656] rounded-2xl w-[25%] h-[100%]  ml-7'>
                                 <button className='h-[100%] w-[100%] bg-gray-800 opacity-100  rounded-2xl' onClick={()=>setCategory(15)}>
