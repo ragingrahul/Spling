@@ -1,0 +1,5 @@
+{ "rewrites": [
+    { "source": "/", "destination": "/" },
+    { "source": "/(.*)", "destination": "/" },
+    {"source":"/GroupFeed","destination":"/GroupFeed"},
+    {"source":"/CreatePost","destination":"/CreatePost"}] }
