@@ -25,7 +25,8 @@ const Posts: NextPage<Props> = (props: Props) => {
     useEffect(() => {
       const InitializePost = async () => {
         if (props?.post?.text && props?.post?.postId && props?.post?.title) {
-          let test: any = JSON.parse(props?.post?.text);
+            console.log(props?.post?.text)
+          let test: any = props?.post?.text;
           const replies: Reply[] | undefined =
             await props?.socialProtocol?.getAllPostReplies(props?.post?.postId);
           setReplies(replies);

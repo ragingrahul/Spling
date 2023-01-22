@@ -48,40 +48,22 @@ export default function Home() {
   const [yoga, setYoga] = useState<boolean>(false)
   const [userName, setUserName] = useState<string>('')
   const [avatar, setAvatar] = useState<File>()
+  const [bio, setBio] = useState<any>()
 
   const avatarRef = useRef<HTMLInputElement>(null)
 
   const solWal = useWallet()
 
-  const checkIfWalletConnected = async () => {
-    try {
-      const { solana } = window;
-      if (solana) {
-        if (solana.isPhantom) {
-          console.log('Phantom Wallet Connected!')
 
-          const response = await solana.connect({
-            onlyIfTrusted: true
-          })
-          console.log('Connected to Public Key : ', response.publicKey.toString())
-          setWalletAddress(response.publicKey.toString())
-        }
-      } else {
-        console.log('Solana Object not found! Get a phantom Wallet!')
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
   const convertBase64 = (file: File) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
-  
+
       fileReader.onload = () => {
         resolve(fileReader.result);
       };
-  
+
       fileReader.onerror = (error) => {
         reject(error);
       };
@@ -126,7 +108,7 @@ export default function Home() {
     }
   }
 
-  
+
 
   const ConnectUI = () => {
     return (
@@ -236,6 +218,33 @@ export default function Home() {
     )
   }
 
+  const UserProfile = () => {
+
+
+
+    return (
+      <div className="bg-[#747474] h-screen flex items-center justify-center">
+        <div className="flex flex-row  text-[#565656] w-[1280px] h-[720px] rounded-[150px]">
+          <img src="./IMG_0166.JPG" alt='running' className='w-1/2 rounded-l-[150px]' />
+          <div className='flex flex-col items-center w-1/2 bg-slate-200 rounded-r-[150px]'>
+            <img src='./Logo.png' alt='Spling Gym' className='mt-[150px]' />
+            <h1 className='m-5 text-2xl font-[Chillax]'>User Profile</h1>
+            {userInfo?.avatar && <img src={userInfo?.avatar} className='h-[160px] w-[160px] rounded-full ' />}
+            <h1 className='m-5 text-2xl font-[Chillax]'>Interests</h1>
+            <div className='flex flex-row'>
+              {(bio?.Cardio) && <h1 className='m-2 text-xl font-medium'>Cardio</h1>}
+              {(bio?.Weight) && <h1 className='m-2 text-xl font-medium'>Weight</h1>}
+              {(bio?.Yoga) && <h1 className='m-2 text-xl font-medium'>Yoga</h1>}
+            </div>
+            <button className='bg-[#A0D8EF] rounded-full mt-[30px] px-14 py-3 font-medium' onClick={()=>window.location.href="/GroupFeed"}>
+              Feed
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const renderNotConnectedContainer = () => {
     return (
       <div className="bg-[#747474] h-screen flex justify-center">
@@ -251,8 +260,9 @@ export default function Home() {
             </div>
           </div>)
           :
-          <GroupFeed socialProtocol={socialProtocol} walletAddress={walletAddress}/>
-          }
+          UserProfile()
+          // <GroupFeed socialProtocol={socialProtocol} walletAddress={walletAddress} />
+        }
 
       </div>)
   }
@@ -272,6 +282,13 @@ export default function Home() {
         const user = await socialProtocol.getUserByPublicKey(walletAddress?.wallet?.adapter?.publicKey)
         setUserInfo(user)
         console.log(user)
+        if (user?.bio) {
+          let bios: any = JSON.parse(user?.bio)
+
+          setBio(bios)
+
+        }
+
         //const group: Group = await socialProtocol.createGroup("Yoga", "A group that contains posts related to Yoga",null);
         // console.log(group)
       }
