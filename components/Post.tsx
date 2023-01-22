@@ -26,7 +26,7 @@ const Posts: NextPage<Props> = (props: Props) => {
       const InitializePost = async () => {
         if (props?.post?.text && props?.post?.postId && props?.post?.title) {
             console.log(props?.post?.text)
-          let test: any = props?.post?.text;
+          let test: any = JSON.parse(props?.post?.text);
           const replies: Reply[] | undefined =
             await props?.socialProtocol?.getAllPostReplies(props?.post?.postId);
           setReplies(replies);
@@ -60,9 +60,9 @@ const Posts: NextPage<Props> = (props: Props) => {
                    {props?.user?.avatar ? <img
                         src={props?.user?.avatar}
                         alt="avatar"
-                        className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF]'
+                        className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF] hover:cursor-pointer' onClick={() => window.location.href=`./Dashboard/${props?.user?.userId}`}
                     /> :
-                        <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF]' />
+                        <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF] hover:cursor-pointer' onClick={() => window.location.href=`./Dashboard/${props?.user?.userId}`}/>
                     }
                 <input
                     value={rep}
@@ -94,16 +94,16 @@ const Posts: NextPage<Props> = (props: Props) => {
     }
 
     const percBar = () => {
-        return(<div className={`bg-[#A0D8EF] h-10 w-[${Math.ceil(current / target * 100)}%] rounded-xl`}></div>)
+        return(<div className='bg-[#A0D8EF] h-10 rounded-xl' style={{width:`${Math.ceil(current/target >= 1 ? 100 : current/target * 100)}%`}}></div>)
     }
     return (
     <div className="w-[110%] rounded-2xl self-end mt-7 flex justify-between">
         {props?.post?.user?.avatar ? <img
             src={props?.post?.user?.avatar}
             alt="avatar"
-            className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF]'
+            className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF] hover:cursor-pointer' onClick={() => window.location.href=`./Dashboard/${props?.post?.userId}`}
         /> :
-            <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF]' />
+            <img src='/ProfilePic.png' alt='ProfilePic' className='rounded-full h-[70px] w-[70px] border-4 border-[#A0D8EF] hover:cursor-pointer' onClick={() => window.location.href=`./Dashboard/${props?.post?.userId}`}/>
         }
         <div className="flex flex-col w-[91%]">
         <div className="bg-slate-200 text-[#565656] flex flex-row rounded-2xl p-7 w-[100%] self-end z-2 relative">
@@ -112,7 +112,7 @@ const Posts: NextPage<Props> = (props: Props) => {
                 <h1 className="bg-slate-200 font-[Chillax] text-6xl w-[60%]">{text}</h1>
                 <div className="mt-[30px] flex">
                     <div className="bg-[#565656] h-10 w-[85%] rounded-xl flex ">
-                        {Math.ceil(current / target * 100) && percBar()}
+                        {Math.ceil(current / target * 100) !==0 && percBar()}
                     </div>
                     <h1 className="text-4xl align-middle ml-2 font-[Chillax]">{Math.ceil(current / target * 100)}%</h1>
                 </div>
@@ -121,15 +121,15 @@ const Posts: NextPage<Props> = (props: Props) => {
             ) || <div className="flex flex-col w-[90%]">
                 <h1 className="bg-slate-200 font-[Chillax] text-6xl w-[60%]">Congratulations {props?.post?.user?.nickname}</h1>
                     <div className="bg-[#565656] h-[50] w-[50%] rounded-2xl mt-[30px]">
-                        {props?.post?.media[0].file && <img src={props?.post?.media[0].file} alt='avatar' className="h-max w-max rounded-xl" />}
+                        {props?.post?.media[0]?.file && <img src={props?.post?.media[0].file} alt='avatar' className="h-max w-max rounded-xl" />}
                     </div>
                     <h1 className="bg-slate-200 font-[Chillax] text-6xl w-[100%] mt-3">for completing {text} exercise !!</h1>
                 <button className="text-[#565656] mt-[15px] text-left" onClick={()=>setToggleReply(!toggleReply)}>See Comments({replies?.length})</button>
         </div>}
             <div className="flex flex-col w-[10%] items-center">
                 <div className="h-[55px] w-[55px] block" onClick={AddLike}>
-                    {(!like && <img src = '/Biceps-Inactive.png' alt='Unlike' className=" bg-cover"/>) ||
-                    <img src = '/Biceps-active.png' alt='like' className="bg-cover"/>}
+                    {(!like && <img src = '/Biceps-Inactive.png' alt='Unlike' className=" bg-cover hover:cursor-pointer"/>) ||
+                    <img src = '/Biceps-active.png' alt='like' className="bg-cover hover:cursor-pointer"/>}
                 </div>
             </div>
             </div>

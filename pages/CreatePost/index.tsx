@@ -149,7 +149,7 @@ export default function CreatePost() {
             const post = await socialProtocol?.createPost(17, "Progression", JSON.stringify(text), null)
         }
 
-        console.log(groupId, exercise, current, target)
+        window.location.href="./GroupFeed"
     }
 
     const CreatePostCompletion = async () => {
@@ -183,7 +183,7 @@ export default function CreatePost() {
                 const post = await socialProtocol?.createPost(17, "Completion", JSON.stringify({exercise}), FileDataValue as FileData, null)
             }
         }
-        window.location.href="./"
+        window.location.href="./GroupFeed"
     }
 
     const onOptionChange = (e: any) => {
@@ -201,6 +201,9 @@ export default function CreatePost() {
                 const user = await socialProtocol.getUserByPublicKey(walletAddress?.wallet?.adapter?.publicKey)
                 setUserInfo(user)
                 console.log(user)
+                if(!user){
+                    window.location.href='./'
+                }
                 //const group: Group = await socialProtocol.createGroup("Yoga", "A group that contains posts related to Yoga",null);
                 // console.log(group)
                 //await socialProtocol.deletePost()
@@ -226,16 +229,16 @@ export default function CreatePost() {
                             </div>
                             <div className='flex flex-row mt-4 font-[Chillax]'>
                                 <div className="flex items-center mx-2">
-                                    <input id="default-radio-1" type="radio" value="Cardio" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onClick={onOptionChange} />
-                                    <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cardio</label>
+                                    <input id="default-radio-1" type="radio" value="Cardio" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" onClick={onOptionChange} />
+                                    <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-gray-900 ">Cardio</label>
                                 </div>
                                 <div className="flex items-center mx-2">
-                                    <input id="default-radio-2" type="radio" value="Weight" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onClick={onOptionChange} />
-                                    <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Weight Training</label>
+                                    <input id="default-radio-2" type="radio" value="Weight" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" onClick={onOptionChange} />
+                                    <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-gray-900">Weight Training</label>
                                 </div>
                                 <div className="flex items-center mx-2">
-                                    <input id="default-radio-3" type="radio" value="Yoga" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onClick={onOptionChange} />
-                                    <label htmlFor="default-radio-3" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Yoga</label>
+                                    <input id="default-radio-3" type="radio" value="Yoga" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 " onClick={onOptionChange} />
+                                    <label htmlFor="default-radio-3" className="ml-2 text-sm font-medium text-gray-900">Yoga</label>
                                 </div>
                             </div>
 
