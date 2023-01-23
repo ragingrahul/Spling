@@ -9,6 +9,7 @@ import {
 import { WalletContextState, useWallet } from "@solana/wallet-adapter-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Head from "next/head";
 
 const options = {
   rpcUrl:
@@ -285,6 +286,9 @@ export default function CreatePost() {
   }, [solWal, walletAddress]);
   return (
     <div>
+      <Head>
+        <title>Create Post</title>
+      </Head>
       <div className="bg-[#747474] h-screen flex justify-center">
         <div
           className="bg-slate-200 rounded-full h-24 w-24 -ml-40 mt-28 mr-14 flex items-center justify-center hover:cursor-pointer"
