@@ -68,7 +68,7 @@ export default function GroupFeed() {
             setUserInfo(user);
             console.log(user);
             if (!user) {
-              window.location.href = "./";
+              window.location.href = "/";
             }
 
             if (user) {

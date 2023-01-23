@@ -66,9 +66,14 @@ export default function Dashboard() {
           const user = await socialProtocol.getUser(Number(id));
 
           setUserInfo(user);
+          if (walletAddress?.wallet?.adapter?.publicKey) {
+          const mainUser = await socialProtocol.getUserByPublicKey(
+            walletAddress?.wallet?.adapter?.publicKey
+          );
 
-          if (!user) {
-            window.location.href = "./";
+          if (!mainUser) {
+            window.location.href = "/";
+          }
           }
           if (user) {
             setBio(JSON.parse(user?.bio));
