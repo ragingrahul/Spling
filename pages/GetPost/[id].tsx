@@ -6,11 +6,11 @@ import {
   ProtocolOptions,
 } from "@spling/social-protocol";
 import { WalletContextState, useWallet } from "@solana/wallet-adapter-react";
+import { useRouter } from "next/router";
+import Posts from "@/components/Post";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Head from 'next/head'
-
-import Posts from "@/components/Post";
+import Head from "next/head";
 
 const getTruncatedAddress = (address: string | undefined) => {
   if (!address) {
@@ -39,12 +39,15 @@ const options = {
   useIndexer: true,
 } as ProtocolOptions;
 
-export default function GroupFeed() {
+export default function GetPost() {
   const [socialProtocol, setSocialProtocol] = useState<SocialProtocol>();
   const [walletAddress, setWalletAddress] = useState<WalletContextState>();
   const [userInfo, setUserInfo] = useState<User | null>();
   const [posts, setPosts] = useState<Post[]>();
   const [bio, setBio] = useState<any>();
+  const [currentPost, setCurrentPost] = useState<Post>();
+  const [initializing, setInitializing] = useState(true);
+  const router = useRouter();
 
   const solWal = useWallet();
 
@@ -53,6 +56,7 @@ export default function GroupFeed() {
 
     const initialize = async () => {
       if (walletAddress?.wallet?.adapter?.publicKey) {
+        const { id } = router.query;
         const socialProtocol: SocialProtocol = await new SocialProtocol(
           solWal,
           null,
@@ -85,12 +89,40 @@ export default function GroupFeed() {
 
         const postInitialize = async () => {
           if (socialProtocol !== null && socialProtocol !== undefined) {
+            const curPost: Post | null = await socialProtocol.getPost(
+              Number(id)
+            );
+            if (curPost) setCurrentPost(curPost);
+            else return toast.error("Post Not Found");
+            setInitializing(false);
             const posted: Post[] = await socialProtocol.getAllPosts(15);
-            setPosts(posted);
-            console.log(posted);
+            const filtered: Post[] = posted.filter((post) => {
+              return (
+                post?.userId === curPost?.userId && post?.postId !== Number(id)
+              );
+            });
+
+            const posted_2: Post[] = await socialProtocol.getAllPosts(16);
+            const filtered_2: Post[] = posted_2.filter((post) => {
+              return (
+                post?.userId === curPost?.userId && post?.postId !== Number(id)
+              );
+            });
+
+            const posted_3: Post[] = await socialProtocol.getAllPosts(17);
+            const filtered_3: Post[] = posted_3.filter((post) => {
+              return (
+                post?.userId === curPost?.userId && post?.postId !== Number(id)
+              );
+            });
+            const newFilteredPost: Post[] = [
+              ...filtered,
+              ...filtered_2,
+              ...filtered_3,
+            ];
+            setPosts(newFilteredPost);
           }
         };
-
         toast.promise(postInitialize(), {
           pending: "Initializing posts",
           success: "Posts Initialized",
@@ -105,7 +137,11 @@ export default function GroupFeed() {
     if (socialProtocol) {
       const postInitialize = async () => {
         const posted: Post[] = await socialProtocol.getAllPosts(number);
-        setPosts(posted);
+        const filtered: Post[] = posted.filter((post) => {
+          return post.userId === userInfo?.userId;
+        });
+        setPosts(filtered);
+        console.log(filtered);
       };
       toast.promise(postInitialize(), {
         pending: "Initializing posts",
@@ -118,22 +154,46 @@ export default function GroupFeed() {
   return (
     <div className="bg-[#747474] h-screen flex justify-center">
       <Head>
-        <title>Spling Gym Feed</title>
+        <title>
+          {initializing
+            ? "Initializing"
+            : currentPost
+            ? `${currentPost?.user?.nickname}'s Post`
+            : "Post Not Found"}
+        </title>
       </Head>
       <div className="bg-[#747474] h-fit w-full flex justify-center">
+        <div
+          className="bg-slate-200 rounded-full h-24 w-24 -ml-10 mt-3 -mr-16 flex items-center justify-center hover:cursor-pointer"
+          onClick={() => {
+            window.location.href = "/GroupFeed";
+          }}
+        >
+          <img src="/Delete Black.png" />
+        </div>
         <div className=" flex flex-col w-[960px] h-fit ml-28">
           <div className="bg-slate-200 text-[#565656] flex flex-row rounded-b-3xl p-7">
             <div className="flex flex-col w-1/2">
-              <img src="/Logo.png" alt="logo" className="w-[240px] hover:cursor-pointer" onClick={() => {window.location.href="./"}} />
-              <h2 className="text-2xl">Feed</h2>
+              <img
+                src="/Logo.png"
+                alt="logo"
+                className="w-[240px] hover:cursor-pointer"
+                onClick={() => {
+                  window.location.href = "/";
+                }}
+              />
+              {userInfo && (
+                <h2 className="text-2xl">
+                  {initializing
+                    ? "Initializing"
+                    : currentPost
+                    ? `${currentPost?.user?.nickname}'s Post`
+                    : "Post Not Found"}
+                </h2>
+              )}
             </div>
             <div className="flex flex-row w-1/2 justify-end">
-              <div
-                className="flex flex-col items-end justify-around mr-[20px] px-[10px] pl-[80px] bg-[#A0D8EF] rounded-2xl hover:cursor-pointer"
-                onClick={() =>
-                  (window.location.href = `./Dashboard/${userInfo?.userId}`)
-                }
-              >
+              <div className="flex flex-col items-end justify-around mr-[20px] px-[10px] pl-[80px] bg-[#A0D8EF] rounded-2xl">
                 <h2 className="text-xl">{userInfo?.nickname}</h2>
                 <h2 className="tracking-wider">
                   {getTruncatedAddress(userInfo?.publicKey?.toString())}
@@ -161,66 +221,20 @@ export default function GroupFeed() {
               )}
             </div>
           </div>
-          <div className="w-[100%] h-[25.2rem] bg-slate-200 rounded-2xl flex flex-col mt-5 mb-1">
-            <h1 className="my-5 text-4xl ml-7 text-[#565656] font-[Chillax]">
-              Your Interests
-            </h1>
-            <div className="flex flex-row w-[100%] h-72">
-              {bio?.Cardio && (
-                <div className="bg-[#565656] rounded-2xl w-[25%] h-[100%]  ml-7">
-                  <button
-                    className="h-[100%] w-[100%] bg-gray-800 opacity-100  rounded-2xl"
-                    onClick={() => setCategory(15)}
-                  >
-                    <div className="overflow-hidden relative h-[100%] w-[100%]">
-                      <img
-                        src="/Cardio.jpg"
-                        className="transition ease-in h-full w-full rounded-2xl opacity-30 hover:opacity-70"
-                      ></img>
-                      <h1 className=" absolute text-red-100 w-full bottom-3 font-[Chillax] text-2xl ">
-                        Cardio
-                      </h1>
-                    </div>
-                  </button>
-                </div>
-              )}
-              {bio?.Weight && (
-                <div className="bg-[#565656] rounded-2xl w-[25%] h-[100%]  ml-7">
-                  <button
-                    className="h-[100%] w-[100%] bg-gray-800 opacity-100  rounded-2xl"
-                    onClick={() => setCategory(16)}
-                  >
-                    <div className="overflow-hidden relative h-[100%] w-[100%]">
-                      <img
-                        src="/Weight.jpg"
-                        className="transition ease-in h-full w-full rounded-2xl opacity-30 hover:opacity-70"
-                      ></img>
-                      <h1 className=" absolute text-red-100 w-full bottom-3 font-[Chillax] text-2xl ">
-                        Weight Training
-                      </h1>
-                    </div>
-                  </button>
-                </div>
-              )}
-              {bio?.Yoga && (
-                <div className="bg-[#565656] rounded-2xl w-[25%] h-[100%]  ml-7">
-                  <button
-                    className="h-[100%] w-[100%] bg-gray-800 opacity-100  rounded-2xl"
-                    onClick={() => setCategory(17)}
-                  >
-                    <div className="overflow-hidden relative h-[100%] w-[100%]">
-                      <img
-                        src="/Yoga.jpg"
-                        className="transition ease-in h-full w-full rounded-2xl opacity-30 hover:opacity-70"
-                      ></img>
-                      <h1 className=" absolute text-red-100 w-full bottom-3 font-[Chillax] text-2xl ">
-                        Yoga
-                      </h1>
-                    </div>
-                  </button>
-                </div>
-              )}
-            </div>
+          {currentPost && (
+            <Posts
+              post={currentPost}
+              socialProtocol={socialProtocol}
+              walletAddress={walletAddress}
+              user={userInfo}
+            />
+          )}
+          <div className="w-[100%] h-20 bg-slate-200 rounded-2xl flex flex-col mt-7 mb-1 font-[Chillax] text-center justify-center text-[#565656] text-4xl">
+            {initializing
+              ? "Initializing"
+              : currentPost
+              ? `More Post by ${currentPost?.user?.nickname}`
+              : "Post Not Found"}
           </div>
           {posts?.map((postObj, index) => (
             <Posts
@@ -235,7 +249,7 @@ export default function GroupFeed() {
         <button
           className="h-[100px] w-[100px] bg-[#A0D8EF] rounded-full sticky top-[86%] right-[8%] ml-5 flex justify-center items-center"
           onClick={() => {
-            window.location.href = "./CreatePost";
+            window.location.href = "/CreatePost";
           }}
         >
           <img src="/Add White.png" alt="Add Sign" className="h-1/2 w-1/2" />

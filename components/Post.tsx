@@ -137,6 +137,7 @@ const Posts: NextPage<Props> = (props: Props) => {
         <div className="bg-slate-200 text-[#565656] flex flex-row rounded-2xl p-7 w-[100%] self-end z-2 relative">
             {(type == "Progression" &&
             <div className="flex flex-col w-[90%]">
+                <div className="flex flex-col w-[100%] hover:cursor-pointer" onClick={() => window.location.href=`/GetPost/${props?.post?.postId}`}>
                 <h1 className="bg-slate-200 font-[Chillax] text-6xl w-[60%]">{text}</h1>
                 <div className="mt-[30px] flex">
                     <div className="bg-[#565656] h-10 w-[85%] rounded-xl flex ">
@@ -144,14 +145,17 @@ const Posts: NextPage<Props> = (props: Props) => {
                     </div>
                     <h1 className="text-4xl align-middle ml-2 font-[Chillax]">{Math.ceil(current / target * 100)}%</h1>
                 </div>
+                </div>
                 <button className="text-[#565656] mt-[15px] text-left" onClick={()=>setToggleReply(!toggleReply)}>See Comments({replies?.length})</button>
             </div>
             ) || <div className="flex flex-col w-[90%]">
+                <div className="flex flex-col w-[100%] hover:cursor-pointer" onClick={() => window.location.href=`/GetPost/${props?.post?.postId}`}>
                 <h1 className="bg-slate-200 font-[Chillax] text-6xl w-[60%]">Congratulations {props?.post?.user?.nickname}</h1>
                     <div className="bg-[#565656] h-[50] w-[50%] rounded-2xl mt-[30px]">
                         {props?.post?.media[0]?.file && <img src={props?.post?.media[0].file} alt='avatar' className="h-max w-max rounded-xl" />}
                     </div>
                     <h1 className="bg-slate-200 font-[Chillax] text-6xl w-[100%] mt-3">for completing {text} exercise !!</h1>
+                    </div>
                 <button className="text-[#565656] mt-[15px] text-left" onClick={()=>setToggleReply(!toggleReply)}>See Comments({replies?.length})</button>
         </div>}
             <div className="flex flex-col w-[10%] items-center">

@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import Posts from "@/components/Post";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Head from "next/head";
 
 const getTruncatedAddress = (address: string | undefined) => {
   if (!address) {
@@ -82,7 +83,7 @@ export default function Dashboard() {
 
         const postInitialize = async () => {
           if (socialProtocol !== null && socialProtocol !== undefined) {
-            const posted: Post[] = await socialProtocol.getAllPosts(16);
+            const posted: Post[] = await socialProtocol.getAllPosts(15);
             const filtered: Post[] = posted.filter((post) => {
               return post?.userId === Number(id);
             });
@@ -119,6 +120,9 @@ export default function Dashboard() {
 
   return (
     <div className="bg-[#747474] h-screen flex justify-center">
+      <Head>
+        <title>{userInfo?.nickname}&apos;s Profile</title>
+      </Head>
       <div className="bg-[#747474] h-fit w-full flex justify-center">
         <div
           className="bg-slate-200 rounded-full h-24 w-24 -ml-10 mt-3 -mr-16 flex items-center justify-center hover:cursor-pointer"
@@ -235,7 +239,7 @@ export default function Dashboard() {
         <button
           className="h-[100px] w-[100px] bg-[#A0D8EF] rounded-full sticky top-[86%] right-[8%] ml-5 flex justify-center items-center"
           onClick={() => {
-            window.location.href = "./CreatePost";
+            window.location.href = "/CreatePost";
           }}
         >
           <img src="/Add White.png" alt="Add Sign" className="h-1/2 w-1/2" />

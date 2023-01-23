@@ -12,6 +12,7 @@ import {
 import dynamic from "next/dynamic";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Head from "next/head";
 
 declare global {
   interface Window {
@@ -272,7 +273,8 @@ export default function Home() {
                 className="h-[160px] w-[160px] rounded-full border-[#A0D8EF] border-4"
               />
             )}
-            <h1 className="mx-5 mt-5 text-2xl font-[Chillax]">Interests</h1>
+            <h1 className="mx-5 mt-2 text-2xl font-[Chillax]">Welcome {userInfo?.nickname}</h1>
+            <h1 className="mx-5 mt-1 text-2xl font-[Chillax]">Interests</h1>
             <div className="flex flex-row">
               {bio?.Cardio && (
                 <div className="bg-[#A0D8EF] rounded-full p-2 m-2 text-l px-4 font-medium">
@@ -296,9 +298,6 @@ export default function Home() {
             >
               Feed
             </button>
-            <p className="mt-[10px] w-[280px] text-center">
-              Add, Browse and Interact with posts from our fitness community
-            </p>
           </div>
         </div>
       </div>
@@ -373,6 +372,11 @@ export default function Home() {
 
   return (
     <div>
+      <Head>
+        <title>Spling Gym</title>
+        <meta name="Spling Gym" content="Spling Gym" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {renderNotConnectedContainer()}
       <ToastContainer
         position="bottom-left"
