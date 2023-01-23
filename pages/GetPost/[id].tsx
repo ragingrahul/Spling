@@ -93,7 +93,7 @@ export default function GetPost() {
               Number(id)
             );
             if (curPost) setCurrentPost(curPost);
-            else return toast.error("Post Not Found");
+            else {setInitializing(false); return toast.error("Post Not Found");}
             setInitializing(false);
             const posted: Post[] = await socialProtocol.getAllPosts(15);
             const filtered: Post[] = posted.filter((post) => {
