@@ -91,6 +91,9 @@ export default function Home() {
               FileDataValue as FileData,
               JSON.stringify(bio)
             );
+            if(user){
+              window.location.href = '/GroupFeed'
+            }
             console.log(user);
           };
           toast.promise(promise(), {
