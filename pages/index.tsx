@@ -254,6 +254,7 @@ export default function Home() {
         <p className="mt-[10px] w-[280px] text-center">
           One time sign up to gain access to our fitness community
         </p>
+        <div className="absolute bg-amber-400 border-amber-600 border-2 p-3 rounded-full text-[#565656] bottom-12 left-[40.5vw] opacity-80 text-opacity-95">You need some SOL & SHDW Token in your wallet</div>
       </>
     );
   };
